@@ -11,3 +11,6 @@ backend/media/
 # React
 frontend/node_modules/
 frontend/dist/
+
+.env
+*.sqlite3
