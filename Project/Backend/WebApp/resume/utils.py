@@ -1,17 +1,3 @@
-# import PyPDF2
-# def extract_text_from_pdf(file):
-#     try:
-#         reader=PyPDF2.pdfreader(file)
-#         text=''
-#         for page in reader.pages:
-#             extracted=page.extract_text(file)
-#             if extracted:
-#                 text+=extracted+" "
-#         return text.strip()
-#     except Exception as e:
-#         return f"Error while extracting text:{str(e)}"
-  
-
 import PyPDF2
 
 def extract_text_from_pdf(file_path):
@@ -37,3 +23,21 @@ def extract_text_from_pdf(file_path):
     except Exception as e:
         print(f"Error: Could not read the PDF file. {e}")
         return ""
+    
+def calculate_resume_score(extracted_text,job_role):
+    job_keywords={
+        'python_dev':['python','django','rest_framework','mysql','git','docker','aws'],
+        'frontend_dev':['html','css','javascript','bootstrap','react','typescript'],
+        'data_analyst':['python','mysql','pandas','numpy','tableau','power bi','statistics'],
+        'backend_dev':['python','django','api','redis']
+    }
+    text=extracted_text.lower()
+    required_skills=job_keywords.get(job_role,[])
+    
+    if not required_skills:
+        return 0,[],[]
+    found_skills=[skill for skill in required_skills if skill in text]
+    missing_skills=[skill for skill in required_skills if skill not in text]
+
+    score=int((len(found_skills)/len(required_skills))*100)
+    return score,found_skills,missing_skills
