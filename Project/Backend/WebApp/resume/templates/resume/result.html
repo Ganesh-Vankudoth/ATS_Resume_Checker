@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Result</title>
+</head>
+<body>
+    <h2>Your Resume score:{{score}}</h2>
+
+    <h3>matched_skills</h3>
+    <ul>
+        {% for skill in found %}
+        <li>{{skill}}</li>
+        {% endfor%}
+    </ul>
+    <h3>Missing_skills</h3>
+    <ul>
+        {% for skill in missing %}
+        <li>{{skill}}</li>
+         {% endfor %}
+    </ul>
+   <a href="/">check another resume</a>
+</body>
+</html>

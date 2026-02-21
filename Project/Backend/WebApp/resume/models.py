@@ -8,7 +8,7 @@ class Resume(models.Model):
         ('frontend_dev','Frontend Developer'),
         ('backend_dev','backend Developer')
     ]
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     file=models.FileField(upload_to='resumes/')
     job_role=models.TextField(max_length=50,choices=ROLE_CHOICES)
     score=models.IntegerField(default=0)
