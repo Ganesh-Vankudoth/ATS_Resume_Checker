@@ -6,7 +6,10 @@ class Resume(models.Model):
         ('python_dev','Python Developer'),
         ('data_analyst',"Data Analyst"),
         ('frontend_dev','Frontend Developer'),
-        ('backend_dev','backend Developer')
+        ('backend_dev','backend Developer'),
+        ('fullstack_dev', 'Full Stack Developer'),
+        ('devops_engine', 'DevOps Engineer'),
+        ('java_dev', 'Java Developer')
     ]
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     file=models.FileField(upload_to='resumes/')

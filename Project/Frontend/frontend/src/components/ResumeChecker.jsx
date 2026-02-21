@@ -31,17 +31,20 @@ function ResumeChecker() {
         <div className="upload-container">
             <form onSubmit={handleUpload}>
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} accept=".pdf" />
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <select value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
                     <option value="python_dev">Python Developer</option>
                     <option value="frontend_dev">Frontend Developer</option>
                     <option value="data_analyst">Data Analyst</option>
+                    <option value="backend_dev">Backend Developer</option>
+                    <option value="fullstack_dev">Full Stack Developer</option>
+                    <option value="devops_engine">DevOps Engineer</option>
+                    <option value="java_dev">Java Developer</option>
                 </select>
                 <button type="submit" disabled={loading}>
                     {loading ? "Analyzing..." : "Check Score"}
                 </button>
             </form>
 
-            {/* Day 7 Dashboard logic using the new CSS classes */}
             {result && (
                 <div className="result-card">
                     <h2 className={`score-text ${result.score > 70 ? 'high-score' : 'low-score'}`}>

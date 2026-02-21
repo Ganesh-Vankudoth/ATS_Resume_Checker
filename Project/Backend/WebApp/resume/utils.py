@@ -29,7 +29,9 @@ def calculate_resume_score(extracted_text,job_role):
         'python_dev':['python','django','rest_framework','mysql','git','docker','aws'],
         'frontend_dev':['html','css','javascript','bootstrap','react','typescript'],
         'data_analyst':['python','mysql','pandas','numpy','tableau','power bi','statistics'],
-        'backend_dev':['python','django','api','redis']
+        'backend_dev':['python','django','api','redis'],'fullstack_dev': ['react', 'node.js', 'express', 'mongodb', 'python', 'django', 'docker', 'cicd'],
+        'devops_engine': ['linux', 'docker', 'kubernetes', 'jenkins', 'terraform', 'aws', 'ansible', 'bash'],
+        'java_dev': ['java', 'spring boot', 'hibernate', 'microservices', 'maven', 'junit', 'sql']
     }
     text=extracted_text.lower()
     required_skills=job_keywords.get(job_role,[])
