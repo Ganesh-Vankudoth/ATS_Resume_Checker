@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
 
-urlpatterns=[
-    path('',views.Upload_resume)
+urlpatterns = [
+    path('api/upload/',views.resume_upload_api),
 ]

@@ -14,3 +14,6 @@ frontend/dist/
 
 .env
 *.sqlite3
+
+#Media Files
+media/
