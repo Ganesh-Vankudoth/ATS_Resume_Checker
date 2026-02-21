@@ -1,0 +1,41 @@
+/* Container for the AI Result */
+.result-card {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.score-text {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Color logic for the score */
+.high-score { color: #28a745; }
+.low-score { color: #ffc107; }
+
+/* Flex layout for the skills columns */
+.skills-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.skill-column {
+    width: 48%;
+}
+
+/* Styled list items for skills */
+.skill-item {
+    list-style: none;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.matched { background-color: #e9f7ef; border-left: 5px solid #28a745; }
+.missing { background-color: #f9ebeb; border-left: 5px solid #d9534f; }
