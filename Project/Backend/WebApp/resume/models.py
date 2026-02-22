@@ -11,6 +11,7 @@ class Resume(models.Model):
         ('devops_engine', 'DevOps Engineer'),
         ('java_dev', 'Java Developer')
     ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     file=models.FileField(upload_to='resumes/')
     job_role=models.TextField(max_length=50,choices=ROLE_CHOICES)
     score=models.IntegerField(default=0)
