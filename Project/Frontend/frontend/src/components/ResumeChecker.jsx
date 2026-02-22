@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from 'axios';
-import '../styles/Dashboard.css'; 
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import '../styles/Dashboard.css';
 
 function ResumeChecker() {
     const [file, setFile] = useState(null);
@@ -11,11 +13,9 @@ function ResumeChecker() {
     const handleUpload = async (e) => {
         e.preventDefault();
         if (!file) return alert("Select a PDF!");
-        setLoading(true);
         
-        setLoading(true); //start spinning
-        setResult(null);  // clear previous results
-
+        setLoading(true); // Start spinning
+        setResult(null);  // Clear previous results to refresh the UI
 
         const formData = new FormData();
         formData.append('file', file);
@@ -25,51 +25,82 @@ function ResumeChecker() {
             const response = await axios.post('http://127.0.0.1:8000/api/upload/', formData);
             setResult(response.data);
         } catch (error) {
-            alert("Analysis failed.");
+            //  Extracting backend error messages
+            const errorMsg = error.response?.data?.error || "Analysis failed.";
+            alert(errorMsg);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="upload-container">
-            <form onSubmit={handleUpload}>
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} accept=".pdf" />
-                <select value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
-                    <option value="python_dev">Python Developer</option>
-                    <option value="frontend_dev">Frontend Developer</option>
-                    <option value="data_analyst">Data Analyst</option>
-                    <option value="backend_dev">Backend Developer</option>
-                    <option value="fullstack_dev">Full Stack Developer</option>
-                    <option value="devops_engine">DevOps Engineer</option>
-                    <option value="java_dev">Java Developer</option>
-                </select>
-                {/* Spinner logic for the button */}
-                <button type="submit" disabled={loading} className={loading ? "btn-disabled" : ""}>
-                    {loading ? <div className="spinner"></div> : "Check Score"}
-                </button>
+        <div className="main-container">
+            {/* Professional Upload Card */}
+            <div className="upload-card">
+                <form onSubmit={handleUpload} className="upload-form">
+                    <input 
+                        type="file" 
+                        onChange={(e) => setFile(e.target.files[0])} 
+                        accept=".pdf" 
+                    />
+                    
+                    <select value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
+                        <option value="python_dev">Python Developer</option>
+                        <option value="frontend_dev">Frontend Developer</option>
+                        <option value="data_analyst">Data Analyst</option>
+                        <option value="backend_dev">Backend Developer</option>
+                        <option value="fullstack_dev">Full Stack Developer</option>
+                        <option value="devops_engine">DevOps Engineer</option>
+                        <option value="java_dev">Java Developer</option>
+                    </select>
 
-            </form>
+                    <button type="submit" disabled={loading} className={loading ? "btn-disabled" : "btn-active"}>
+                        {loading ? <div className="spinner"></div> : "Check Score"}
+                    </button>
+                </form>
+            </div>
 
+            {/*  Visual Results Display */}
             {result && (
                 <div className="result-card">
-                    <h2 className={`score-text ${result.score > 70 ? 'high-score' : 'low-score'}`}>
-                        ATS Match Score: {result.score}%
-                    </h2>
+                    <div className="score-viz">
+                        <div style={{ width: 160, height: 160, margin: '0 auto' }}>
+                            <CircularProgressbar 
+                                value={result.score} 
+                                text={`${result.score}%`} 
+                                styles={buildStyles({
+                                    pathColor: result.score > 70 ? '#28a745' : '#ffc107',
+                                    textColor: '#333',
+                                    trailColor: '#eee',
+                                    strokeLinecap: 'round',
+                                    textSize: '18px'
+                                })}
+                            />
+                        </div>
+                        <h3>ATS Compatibility Match</h3>
+                    </div>
                     
                     <div className="skills-grid">
                         <div className="skill-column">
-                            <h4 style={{ color: '#28a745' }}>✅ Matched Skills</h4>
-                            {result.found.map((skill, i) => (
-                                <li key={i} className="skill-item matched">{skill}</li>
-                            ))}
+                            <h4 className="section-title matched">✅ Matched Skills</h4>
+                            <div className="skill-list">
+                                {/* Safety check: use '|| []' to prevent .map() from crashing if result is empty */}
+                                {(result.found || []).map((skill, i) => (
+                                    <span key={i} className="skill-badge matched">{skill}</span>
+                                ))}
+                                {result.found?.length === 0 && <p className="no-data">No keywords matched.</p>}
+                            </div>
                         </div>
 
                         <div className="skill-column">
-                            <h4 style={{ color: '#d9534f' }}>❌ Missing Keywords</h4>
-                            {result.missing.map((skill, i) => (
-                                <li key={i} className="skill-item missing">{skill}</li>
-                            ))}
+                            <h4 className="section-title missing">❌ Missing Keywords</h4>
+                            <div className="skill-list">
+                                {/* Safety check for missing skills list */}
+                                {(result.missing || []).map((skill, i) => (
+                                    <span key={i} className="skill-badge missing">{skill}</span>
+                                ))}
+                                {result.missing?.length === 0 && <p className="no-data">Your resume is fully optimized!</p>}
+                            </div>
                         </div>
                     </div>
                 </div>
