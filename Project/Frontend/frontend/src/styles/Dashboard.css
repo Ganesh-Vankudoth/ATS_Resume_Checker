@@ -60,3 +60,37 @@
 
 .matched { background-color: #e9f7ef; border-left: 5px solid #28a745; }
 .missing { background-color: #f9ebeb; border-left: 5px solid #d9534f; }
+
+
+/* Day 10: Table Styles for History Page */
+.history-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th, .history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.history-table th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}

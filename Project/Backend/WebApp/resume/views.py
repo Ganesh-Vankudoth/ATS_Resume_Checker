@@ -7,9 +7,7 @@ from django.contrib.auth.models import User
 
 @api_view(['POST'])
 def resume_upload_api(request):
-    """
-    Function-based view to handle resume uploads and analysis.
-    """
+   
     #  Get data from the request
     # request.FILES for the PDF, request.data for text fields
     file = request.FILES.get('file')
@@ -34,7 +32,7 @@ def resume_upload_api(request):
 
 
     #  Create Resume object in MySQL
-    # Note: We link to the first user for testing 
+    # We link to the first user for testing 
     try:
         user = User.objects.first() 
         resume = Resume.objects.create(
@@ -67,3 +65,28 @@ def resume_upload_api(request):
             {"error": "Internal processing error during analysis."}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+   
+@api_view(["GET"])
+def user_history_api(request):
+    
+    try:
+        # Fetching records for the first available user
+        user = User.objects.first()
+        
+        history = Resume.objects.filter(user=user).order_by('-created_at')
+        
+        history_data = []
+        for item in history:
+            history_data.append({
+                "id": item.id,
+                # Converts 'python_dev' into 'Python Developer' for the UI
+                "job_role": item.get_job_role_display(),
+                "score": item.score,
+                # Formats the 'created_at' timestamp into a readable string
+                "date": item.created_at.strftime("%Y-%m-%d %H:%M"),
+                "matched": item.matched_keywords
+            })
+        return Response(history_data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": "Could not retrieve history from the database."},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)

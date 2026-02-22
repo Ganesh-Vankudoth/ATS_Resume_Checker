@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('api/upload/',views.resume_upload_api),
+    path('api/history/',views.user_history_api)
 ]
