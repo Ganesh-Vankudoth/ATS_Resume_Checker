@@ -149,3 +149,85 @@
     justify-content: center;
     margin-top: 100px;
 }
+/*  Filter Bar Styling */
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    justify-content: space-between;
+}
+
+.search-input {
+    flex: 2;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+}
+
+.filter-select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    font-style: italic;
+}
+/*  Theme Variables */
+:root {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --border-color: #eeeeee;
+}
+
+.dark-theme {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-main: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --border-color: #333333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Update existing cards to use variables */
+.result-card, .history-container, .upload-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.theme-toggle {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-main);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Ensure table text remains visible in dark mode */
+.history-table td, .history-table th {
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+}

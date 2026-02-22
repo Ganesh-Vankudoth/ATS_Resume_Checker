@@ -1,21 +1,36 @@
-import ResumeChecker from './components/ResumeChecker'
-import UserHistory from './components/UserHistory';
-import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-function App(){
-    return(
-     
-        <Router>
-            <div className="App">
-                {/* Navbar stays visisble on every page */}
-                 <Navbar/>
-        <Routes>   
-       <Route path="/" element={<ResumeChecker />} />
-       <Route path="/history" element={<UserHistory/>}/>
+import ResumeChecker from './components/ResumeChecker';
+import UserHistory from './components/UserHistory';
+
+function App() {
+  //  Persistent Dark Mode State
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem('theme') === 'dark'
+  );
+
+  useEffect(() => {
+    // Apply theme class to the body for global CSS targeting
+    document.body.className = darkMode ? 'dark-theme' : 'light-theme';
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  const toggleTheme = () => setDarkMode(!darkMode);
+
+  return (
+    <Router>
+      <div className="App">
+        {/* Pass theme props to Navbar for the toggle switch */}
+        <Navbar darkMode={darkMode} toggleTheme={toggleTheme} /> 
+        
+        <Routes>
+          <Route path="/" element={<ResumeChecker />} />
+          <Route path="/history" element={<UserHistory />} />
         </Routes>
-        </div> 
-        </Router>
-       
-    );
+      </div>
+    </Router>
+  );
 }
+
 export default App;
