@@ -13,6 +13,10 @@ function ResumeChecker() {
         if (!file) return alert("Select a PDF!");
         setLoading(true);
         
+        setLoading(true); //start spinning
+        setResult(null);  // clear previous results
+
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('job_role', role);
@@ -40,9 +44,11 @@ function ResumeChecker() {
                     <option value="devops_engine">DevOps Engineer</option>
                     <option value="java_dev">Java Developer</option>
                 </select>
-                <button type="submit" disabled={loading}>
-                    {loading ? "Analyzing..." : "Check Score"}
+                {/* Spinner logic for the button */}
+                <button type="submit" disabled={loading} className={loading ? "btn-disabled" : ""}>
+                    {loading ? <div className="spinner"></div> : "Check Score"}
                 </button>
+
             </form>
 
             {result && (
