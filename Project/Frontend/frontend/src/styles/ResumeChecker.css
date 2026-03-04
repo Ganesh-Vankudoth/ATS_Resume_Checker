@@ -1,0 +1,41 @@
+.checker-container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+.upload-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px dashed var(--border);
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.upload-card:hover {
+    border-color: var(--primary);
+}
+
+.result-card {
+    margin-top: 40px;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* Circular score enhancement */
+.score-circle {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 8px solid var(--primary);
+    font-size: 24px;
+    font-weight: 800;
+}

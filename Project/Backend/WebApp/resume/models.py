@@ -17,11 +17,10 @@ class Resume(models.Model):
     score=models.IntegerField(default=0)
     matched_keywords=models.TextField(blank=True,null=True)
     created_at=models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        username = self.user.username if self.user else "Anonymous"
-        return f"{self.user.username} - {self.job_role}"
-
+def __str__(self):
+    username = self.user.username if self.user else "Anonymous"
+    return f"{username} - {self.job_role}"
+    
 class CustomUser(AbstractUser):
     #  Roles defined for your job portal logic
     ROLE_CHOICES = (
@@ -44,3 +43,4 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+    

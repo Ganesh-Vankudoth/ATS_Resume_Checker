@@ -1,0 +1,43 @@
+/* src/styles/UserHistory.css */
+.history-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* Gives a "row card" look */
+}
+
+.history-table th {
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.history-table tr td {
+    background-color: var(--bg-color);
+    padding: 18px 15px;
+}
+
+.history-table tr td:first-child { border-radius: 10px 0 0 10px; }
+.history-table tr td:last-child { border-radius: 0 10px 10px 0; }
+
+.high-score { color: #28a745; font-weight: bold; }
+.low-score { color: #f39c12; font-weight: bold; }

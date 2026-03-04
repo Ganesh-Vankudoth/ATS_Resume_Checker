@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from 'axios';
+import axios from '../axiosConfig';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import '../styles/Dashboard.css';
+import '../styles/ResumeChecker.css';
 
 function ResumeChecker() {
     const [file, setFile] = useState(null);
@@ -22,12 +22,18 @@ function ResumeChecker() {
         formData.append('job_role', role);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/upload/', formData);
+            const response = await axios.post('http://127.0.0.1:8000/api/upload/', formData, {
+            withCredentials: true, // 👈 THE MOST IMPORTANT LINE
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
             setResult(response.data);
         } catch (error) {
+            console.error("Analysis Error:", error.response);
             //  Extracting backend error messages
-            const errorMsg = error.response?.data?.error || "Analysis failed.";
-            alert(errorMsg);
+            const errorMsg = error.response?.data?.error || "Connection refused by server.";
+         alert(`Analysis Stopped: ${errorMsg}`);
         } finally {
             setLoading(false);
         }
@@ -85,10 +91,10 @@ function ResumeChecker() {
                             <h4 className="section-title matched">✅ Matched Skills</h4>
                             <div className="skill-list">
                                 {/* Safety check: use '|| []' to prevent .map() from crashing if result is empty */}
-                                {(result.found || []).map((skill, i) => (
+                                {(result.matched_list || []).map((skill, i) => (
                                     <span key={i} className="skill-badge matched">{skill}</span>
                                 ))}
-                                {result.found?.length === 0 && <p className="no-data">No keywords matched.</p>}
+                                {result.matched_list?.length === 0 && <p className="no-data">No keywords matched.</p>}
                             </div>
                         </div>
 
@@ -96,10 +102,10 @@ function ResumeChecker() {
                             <h4 className="section-title missing">❌ Missing Keywords</h4>
                             <div className="skill-list">
                                 {/* Safety check for missing skills list */}
-                                {(result.missing || []).map((skill, i) => (
+                                {(result.missing_list || []).map((skill, i) => (
                                     <span key={i} className="skill-badge missing">{skill}</span>
                                 ))}
-                                {result.missing?.length === 0 && <p className="no-data">Your resume is fully optimized!</p>}
+                                {result.missing_list?.length === 0 && <p className="no-data">Your resume is fully optimized!</p>}
                             </div>
                         </div>
                     </div>

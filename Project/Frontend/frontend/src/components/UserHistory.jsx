@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import '../styles/Dashboard.css';
+import axios from '../axiosConfig';
+import '../styles/UserHistory.css';
 
 function UserHistory() {
     const [history, setHistory] = useState([]);
@@ -9,26 +9,32 @@ function UserHistory() {
     // Search and Filter States
     const [searchTerm, setSearchTerm] = useState("");
     const [filterRole, setFilterRole] = useState("all");
-
-    useEffect(() => {
-        const fetchHistory = async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/history/');
-                setHistory(response.data);
-            } catch (error) {
-                console.error("Fetch error:", error);
+useEffect(() => {
+    const fetchHistory = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/history/', {
+                withCredentials: true // 👈 MANDATORY: This sends the session cookie to Django
+            });
+            setHistory(response.data);
+        } catch (error) {
+            console.error("Fetch error:", error);
+            // Don't alert on 401/403 (unauthorized), just redirect to login
+            if (error.response?.status === 401) {
+                console.log("User not logged in");
+            } else {
                 alert("Failed to load History.");
-            } finally {
-                setLoading(false);
             }
-        };
-        fetchHistory();
-    }, []);
-
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchHistory();
+}, []);
     // Logic to filter the history list in real-time
     const filteredHistory = history.filter((item) => {
-        const matchesSearch = item.matched.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRole = filterRole === "all" || item.job_role === filterRole;
+        const keywordsString = item.matched_list ? item.matched_list.join(", ") : "";
+        const matchesSearch = keywordsString.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRole = filterRole === "all" || item.job_role_display === filterRole;
         return matchesSearch && matchesRole;
     });
 
@@ -81,12 +87,12 @@ function UserHistory() {
                     <tbody>
                         {filteredHistory.map((item) => (
                             <tr key={item.id}>
-                                <td>{item.date}</td>
-                                <td>{item.job_role}</td>
+                               <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                                <td>{item.job_role_display}</td>
                                 <td className={item.score > 70 ? "high-score" : "low-score"}>
                                     {item.score}%
                                 </td>
-                                <td>{item.matched || "None"}</td>
+                                <td>{item.matched_list && item.matched_list.length > 0 ? item.matched_list.join(", ") : "None"}</td>
                             </tr>
                         ))}
                     </tbody>

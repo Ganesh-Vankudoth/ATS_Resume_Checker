@@ -1,46 +1,125 @@
 import { useState } from 'react';
-import axios from 'axios';
-import '../styles/Dashboard.css';
+import axios from '../axiosConfig';
+import '../styles/Auth.css';
 
 function Auth({ setUser }) {
     const [isLogin, setIsLogin] = useState(true);
-    const [form, setForm] = useState({ username: '', password: '', role: 'job_seeker' });
+    const [form, setForm] = useState({
+        username: '',
+        password: '',
+        role: 'job_seeker'
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const url = isLogin ? 'login/' : 'register/';
+
         try {
-            const res = await axios.post(`http://127.0.0.1:8000/api/${url}`, form);
             if (isLogin) {
-                setUser(res.data); // Save user to App state
-                localStorage.setItem('user', JSON.stringify(res.data));
+                // 🔐 JWT LOGIN
+                const res = await axios.post('/api/token/', {
+                    username: form.username,
+                    password: form.password
+                });
+
+                // Store tokens
+                localStorage.setItem('access', res.data.access);
+                localStorage.setItem('refresh', res.data.refresh);
+
+                // Store user info
+                localStorage.setItem('user', JSON.stringify({
+                    username: form.username
+                }));
+
+                setUser({ username: form.username });
+
             } else {
-                alert("Registered! Please login.");
+                // 📝 REGISTER
+                await axios.post('/api/register/', {
+                    username: form.username,
+                    password: form.password,
+                    role: form.role
+                });
+
+                alert("Registration Successful! Please Login.");
                 setIsLogin(true);
             }
-        } catch (err) { alert("Auth failed: " + (err.response?.data?.error || "Error")); }
+
+        } catch (err) {
+            alert("Error: " + (err.response?.data?.detail || "Login failed"));
+        }
     };
 
     return (
-        <div className="main-container">
-            <div className="upload-card" style={{ maxWidth: '400px', margin: 'auto' }}>
-                <h2>{isLogin ? 'Login' : 'Register'}</h2>
-                <form onSubmit={handleSubmit} style={{ flexDirection: 'column' }}>
-                    <input type="text" placeholder="Username" onChange={e => setForm({...form, username: e.target.value})} required />
-                    <input type="password" placeholder="Password" onChange={e => setForm({...form, password: e.target.value})} required />
+        <div className="auth-container">
+            <div className="auth-card">
+                <div className="auth-header">
+                    <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+                    <p>
+                        {isLogin
+                            ? 'Enter your credentials to access your account'
+                            : 'Join us to start analyzing your resumes'}
+                    </p>
+                </div>
+
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. ganesh_2026"
+                            value={form.username}
+                            onChange={e =>
+                                setForm({ ...form, username: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            placeholder="••••••••"
+                            value={form.password}
+                            onChange={e =>
+                                setForm({ ...form, password: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
                     {!isLogin && (
-                        <select onChange={e => setForm({...form, role: e.target.value})}>
-                            <option value="job_seeker">Job Seeker</option>
-                            <option value="employer">Employer</option>
-                        </select>
+                        <div className="input-group">
+                            <label>I am a...</label>
+                            <select
+                                className="role-select"
+                                value={form.role}
+                                onChange={e =>
+                                    setForm({ ...form, role: e.target.value })
+                                }
+                            >
+                                <option value="job_seeker">Job Seeker</option>
+                                <option value="employer">Employer</option>
+                            </select>
+                        </div>
                     )}
-                    <button type="submit" className="btn-active">{isLogin ? 'Login' : 'Sign Up'}</button>
+
+                    <button type="submit" className="btn-active">
+                        {isLogin ? 'Sign In' : 'Get Started'}
+                    </button>
                 </form>
-                <p onClick={() => setIsLogin(!isLogin)} style={{ cursor: 'pointer', marginTop: '10px', color: '#007bff' }}>
-                    {isLogin ? "Need an account? Register" : "Have an account? Login"}
+
+                <p
+                    className="auth-toggle-text"
+                    onClick={() => setIsLogin(!isLogin)}
+                >
+                    {isLogin
+                        ? "New here? Create an account"
+                        : "Already have an account? Log in"}
                 </p>
             </div>
         </div>
     );
 }
+
 export default Auth;
