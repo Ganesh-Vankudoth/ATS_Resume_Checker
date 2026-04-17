@@ -7,47 +7,40 @@ function Auth({ setUser }) {
     const [form, setForm] = useState({
         username: '',
         password: '',
-        role: 'job_seeker'
     });
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        try {
-            if (isLogin) {
-                // 🔐 JWT LOGIN
-                const res = await axios.post('/api/token/', {
-                    username: form.username,
-                    password: form.password
-                });
+    try {
+        if (isLogin) {
+            const res = await axios.post('/api/token/', {
+                username: form.username,
+                password: form.password
+            });
 
-                // Store tokens
-                localStorage.setItem('access', res.data.access);
-                localStorage.setItem('refresh', res.data.refresh);
+            localStorage.setItem('access', res.data.access);
+            localStorage.setItem('refresh', res.data.refresh);
 
-                // Store user info
-                localStorage.setItem('user', JSON.stringify({
-                    username: form.username
-                }));
+            const userData = { username: form.username };
+            localStorage.setItem('user', JSON.stringify(userData));
 
-                setUser({ username: form.username });
+            setUser(userData);
 
-            } else {
-                // 📝 REGISTER
-                await axios.post('/api/register/', {
-                    username: form.username,
-                    password: form.password,
-                    role: form.role
-                });
+        } else {
+            await axios.post('/api/register/', {
+                username: form.username,
+                password: form.password,
+            });
 
-                alert("Registration Successful! Please Login.");
-                setIsLogin(true);
-            }
-
-        } catch (err) {
-            alert("Error: " + (err.response?.data?.detail || "Login failed"));
+            alert("Registration successful! Please login.");
+            setIsLogin(true);
         }
-    };
+
+    } catch (err) {
+        alert(err.response?.data?.detail || "Something went wrong");
+    }
+};
 
     return (
         <div className="auth-container">
@@ -88,21 +81,7 @@ function Auth({ setUser }) {
                         />
                     </div>
 
-                    {!isLogin && (
-                        <div className="input-group">
-                            <label>I am a...</label>
-                            <select
-                                className="role-select"
-                                value={form.role}
-                                onChange={e =>
-                                    setForm({ ...form, role: e.target.value })
-                                }
-                            >
-                                <option value="job_seeker">Job Seeker</option>
-                                <option value="employer">Employer</option>
-                            </select>
-                        </div>
-                    )}
+                   
 
                     <button type="submit" className="btn-active">
                         {isLogin ? 'Sign In' : 'Get Started'}

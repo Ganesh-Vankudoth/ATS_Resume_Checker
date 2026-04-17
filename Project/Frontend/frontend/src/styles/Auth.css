@@ -1,30 +1,32 @@
 /* Auth.css */
+
 .auth-container {
     height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #f8fafc;
 }
 
 .auth-card {
-    background: var(--card-bg);
+    background: #ffffff;
     padding: 2.5rem;
     border-radius: 20px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
-    border: 1px solid var(--border);
+    border: 1px solid #e2e8f0;
 }
 
 .auth-header h2 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--text-dark);
+    color: #1e293b;
     margin: 0;
 }
 
 .auth-header p {
-    color: var(--text-muted);
+    color: #64748b;
     font-size: 0.9rem;
     margin: 0.5rem 0 2rem 0;
 }
@@ -40,10 +42,9 @@
 .input-group label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-dark);
+    color: #1e293b;
 }
-
-.auth-form input, .role-select {
+.auth-form input {
     padding: 0.75rem 1rem;
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -52,16 +53,36 @@
     transition: all 0.2s;
 }
 
+/* INPUT FOCUS */
 .auth-form input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     outline: none;
 }
 
+/* BUTTON */
+.btn-active {
+    background-color: #6366f1;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-active:hover {
+    background-color: #4f46e5;
+}
+
+/* TOGGLE TEXT */
 .auth-toggle-text {
     margin-top: 1.5rem;
-    color: var(--primary);
+    color: #6366f1;
     font-weight: 500;
     cursor: pointer;
     font-size: 0.9rem;
+    text-align: center;
 }

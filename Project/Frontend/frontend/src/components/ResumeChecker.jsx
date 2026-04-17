@@ -1,118 +1,179 @@
 import { useState } from "react";
-import axios from '../axiosConfig';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import '../styles/ResumeChecker.css';
+import axios from "../axiosConfig";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import "../styles/ResumeChecker.css";
 
-function ResumeChecker() {
-    const [file, setFile] = useState(null);
-    const [role, setRole] = useState('python_dev');
-    const [result, setResult] = useState(null);
-    const [loading, setLoading] = useState(false);
+function ResumeChecker(){
 
-    const handleUpload = async (e) => {
-        e.preventDefault();
-        if (!file) return alert("Select a PDF!");
-        
-        setLoading(true); // Start spinning
-        setResult(null);  // Clear previous results to refresh the UI
+const [file,setFile]=useState(null);
+const [role,setRole]=useState("python_dev");
+const [result,setResult]=useState(null);
+const [loading,setLoading]=useState(false);
 
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('job_role', role);
+const handleUpload=async(e)=>{
 
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/api/upload/', formData, {
-            withCredentials: true, // 👈 THE MOST IMPORTANT LINE
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        });
-            setResult(response.data);
-        } catch (error) {
-            console.error("Analysis Error:", error.response);
-            //  Extracting backend error messages
-            const errorMsg = error.response?.data?.error || "Connection refused by server.";
-         alert(`Analysis Stopped: ${errorMsg}`);
-        } finally {
-            setLoading(false);
-        }
-    };
+e.preventDefault();
 
-    return (
-        <div className="main-container">
-            {/* Professional Upload Card */}
-            <div className="upload-card">
-                <form onSubmit={handleUpload} className="upload-form">
-                    <input 
-                        type="file" 
-                        onChange={(e) => setFile(e.target.files[0])} 
-                        accept=".pdf" 
-                    />
-                    
-                    <select value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
-                        <option value="python_dev">Python Developer</option>
-                        <option value="frontend_dev">Frontend Developer</option>
-                        <option value="data_analyst">Data Analyst</option>
-                        <option value="backend_dev">Backend Developer</option>
-                        <option value="fullstack_dev">Full Stack Developer</option>
-                        <option value="devops_engine">DevOps Engineer</option>
-                        <option value="java_dev">Java Developer</option>
-                    </select>
+if(!file) return alert("Select a PDF!");
 
-                    <button type="submit" disabled={loading} className={loading ? "btn-disabled" : "btn-active"}>
-                        {loading ? <div className="spinner"></div> : "Check Score"}
-                    </button>
-                </form>
-            </div>
+setLoading(true);
+setResult(null);
 
-            {/*  Visual Results Display */}
-            {result && (
-                <div className="result-card">
-                    <div className="score-viz">
-                        <div style={{ width: 160, height: 160, margin: '0 auto' }}>
-                            <CircularProgressbar 
-                                value={result.score} 
-                                text={`${result.score}%`} 
-                                styles={buildStyles({
-                                    pathColor: result.score > 70 ? '#28a745' : '#ffc107',
-                                    textColor: '#333',
-                                    trailColor: '#eee',
-                                    strokeLinecap: 'round',
-                                    textSize: '18px'
-                                })}
-                            />
-                        </div>
-                        <h3>ATS Compatibility Match</h3>
-                    </div>
-                    
-                    <div className="skills-grid">
-                        <div className="skill-column">
-                            <h4 className="section-title matched">✅ Matched Skills</h4>
-                            <div className="skill-list">
-                                {/* Safety check: use '|| []' to prevent .map() from crashing if result is empty */}
-                                {(result.matched_list || []).map((skill, i) => (
-                                    <span key={i} className="skill-badge matched">{skill}</span>
-                                ))}
-                                {result.matched_list?.length === 0 && <p className="no-data">No keywords matched.</p>}
-                            </div>
-                        </div>
+const formData=new FormData();
+formData.append("file",file);
+formData.append("job_role",role);
 
-                        <div className="skill-column">
-                            <h4 className="section-title missing">❌ Missing Keywords</h4>
-                            <div className="skill-list">
-                                {/* Safety check for missing skills list */}
-                                {(result.missing_list || []).map((skill, i) => (
-                                    <span key={i} className="skill-badge missing">{skill}</span>
-                                ))}
-                                {result.missing_list?.length === 0 && <p className="no-data">Your resume is fully optimized!</p>}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+try{
+
+const response=await axios.post("/api/upload/",formData);
+setResult(response.data.data);
+
+}catch(error){
+
+const errorMsg=error.response?.data?.error || "Upload failed";
+alert(`Analysis Stopped: ${errorMsg}`);
+
+}finally{
+setLoading(false);
+}
+
+};
+
+return(
+
+<div className="checker-container">
+
+<h1 className="page-title">AI Resume Analyzer</h1>
+<p className="page-subtitle">
+Upload your resume to evaluate ATS compatibility and receive AI insights
+</p>
+
+<div className="upload-card">
+
+<form onSubmit={handleUpload} className="upload-form">
+
+<input
+type="file"
+accept=".pdf"
+onChange={(e)=>setFile(e.target.files[0])}
+/>
+
+<select
+value={role}
+onChange={(e)=>setRole(e.target.value)}
+className="role-select"
+>
+<option value="python_dev">Python Developer</option>
+<option value="frontend_dev">Frontend Developer</option>
+<option value="backend_dev">Backend Developer</option>
+<option value="fullstack_dev">Full Stack Developer</option>
+<option value="data_analyst">Data Analyst</option>
+<option value="devops_engine">DevOps Engineer</option>
+</select>
+
+<button type="submit" disabled={loading} className="primary-btn">
+{loading ? "Analyzing..." : "Analyze Resume"}
+</button>
+
+</form>
+</div>
+
+{result && (
+
+<div className="result-card">
+
+<div className="score-section">
+
+<div className="score-chart">
+<CircularProgressbar
+value={result.score}
+text={`${result.score}%`}
+styles={buildStyles({
+pathColor:"#2563eb",
+textColor:"#111",
+trailColor:"#e5e7eb"
+})}
+/>
+</div>
+
+<h3>ATS Compatibility Score</h3>
+
+</div>
+
+<div className="analytics-grid">
+
+<div className="metric-box">
+<span className="metric-number">{result.features.skill_count}</span>
+<span className="metric-label">Skills Detected</span>
+</div>
+
+<div className="metric-box">
+<span className="metric-number">{result.features.project_count}</span>
+<span className="metric-label">Projects</span>
+</div>
+
+<div className="metric-box">
+<span className="metric-number">
+{result.features.experience ? "Yes":"No"}
+</span>
+<span className="metric-label">Experience</span>
+</div>
+
+</div>
+
+<h3 className="quality-text">
+Resume Strength: {result.predicted_quality}
+</h3>
+
+<div className="skills-grid">
+
+<div className="skill-column">
+<h4>Matched Skills</h4>
+
+<div className="skill-list">
+{(result.matched_list || []).map((s,i)=>(
+<span key={i} className="skill-badge matched">{s}</span>
+))}
+</div>
+</div>
+
+<div className="skill-column">
+<h4>Missing Skills</h4>
+
+<div className="skill-list">
+{(result.missing_list || []).map((s,i)=>(
+<span key={i} className="skill-badge missing">{s}</span>
+))}
+</div>
+</div>
+
+</div>
+
+{result.suggestions && (
+
+<div className="suggestion-box">
+
+<h4>AI Suggestions</h4>
+
+<ul>
+{result.suggestions.map((s,i)=>(
+<li key={i}>{s}</li>
+))}
+</ul>
+
+</div>
+
+)}
+
+</div>
+
+)}
+
+</div>
+
+);
+
 }
 
 export default ResumeChecker;

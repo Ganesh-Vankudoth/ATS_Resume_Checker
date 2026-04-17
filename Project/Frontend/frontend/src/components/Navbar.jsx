@@ -1,31 +1,37 @@
-import { Link, useNavigate } from 'react-router-dom';
-import axios from '../axiosConfig';
-import '../styles/Navbar.css';
 
-function Navbar({ user, handleLogout, darkMode, toggleTheme }) {
-  const navigate = useNavigate();
+import { Link } from "react-router-dom";
+import "../styles/Navbar.css";
 
-
+function Navbar({ user, handleLogout}) {
   return (
     <nav className="navbar">
-      <div className="nav-logo">AI Resume Checker</div>
-      <div className="nav-links">
-        <Link to="/" className="nav-item">Home</Link>
-        
-        {user ? (
-          <>
-            <Link to="/history" className="nav-item">History</Link>
-            <span className="user-badge">👤 {user.username}</span>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
-          </>
-        ) : (
-          <Link to="/" className="nav-item">Login</Link>
-        )}
 
-        <button onClick={toggleTheme} className="theme-toggle">
-          {darkMode ? '☀️' : '🌙'}
-        </button>
+      {/* LEFT (empty for balance) */}
+      <div className="nav-left"></div>
+
+      {/* CENTER TITLE */}
+      <div className="nav-center">
+        <span className="nav-logo"> Resume Analyzer</span>
       </div>
+
+      {/* RIGHT SIDE */}
+      <div className="nav-right">
+
+        <Link to="/" className="nav-item">Home</Link>
+        <Link to="/history" className="nav-item">History</Link>
+
+        <div className="user-badge">
+          👤 {user.username}
+        </div>
+
+        <button onClick={handleLogout} className="logout-btn">
+          Logout
+        </button>
+
+     
+
+      </div>
+
     </nav>
   );
 }
