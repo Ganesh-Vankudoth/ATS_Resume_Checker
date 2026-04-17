@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    'firstapp',
     'resume',
 ]
 MIDDLEWARE = [
@@ -139,10 +138,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:5173",
-#     "http://127.0.0.1:5173",
-# ]
+
 AUTH_USER_MODEL = 'resume.CustomUser'
 from datetime import timedelta
 
@@ -160,6 +156,4 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-# SESSION_COOKIE_SAMESITE = 'Lax'
-# SESSION_COOKIE_HTTPONLY = False  # Allows React to see that a session exists
-# CSRF_COOKIE_SAMESITE = 'Lax'
+

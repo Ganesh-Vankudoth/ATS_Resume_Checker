@@ -1,19 +1,35 @@
-# Python
-backend/venv/
-backend/__pycache__/
+# ==============================
+# 🔹 Python / Django
+# ==============================
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Security & DB
-backend/.env
-backend/db.sqlite3
-backend/media/
-
-# React
-frontend/node_modules/
-frontend/dist/
-
-.env
+db.sqlite3
 *.sqlite3
 
-#Media Files
+.env
+
+# Media uploads
 media/
+
+# ==============================
+# 🔹 ML Model Files
+# ==============================
+*.pkl
+*.joblib
+
+# ==============================
+# 🔹 Logs
+# ==============================
+logs/
+*.log
+
+# ==============================
+# 🔹 System / Editor
+# ==============================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
